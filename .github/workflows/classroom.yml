@@ -1,0 +1,51 @@
+name: Autograding Tests
+'on':
+- push
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Test cantidades
+      id: test-cantidades
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: Test cantidades
+        setup-command: ''
+        command: gradle test --tests *TestCantidades
+        timeout: 10
+        max-score: 20
+    - name: Test funcionalidades
+      id: test-funcionalidades
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: Test funcionalidades
+        setup-command: ''
+        command: gradle test --tests *TestFuncionalidades
+        timeout: 10
+        max-score: 20
+    - name: Test constructores
+      id: test-constructores
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: Test constructores
+        setup-command: ''
+        command: gradle test --tests *TestConstructores
+        timeout: 10
+        max-score: 10
+    - name: Autograding Reporter
+      uses: education/autograding-grading-reporter@v1
+      env:
+        TEST-CANTIDADES_RESULTS: "${{steps.test-cantidades.outputs.result}}"
+        TEST-FUNCIONALIDADES_RESULTS: "${{steps.test-funcionalidades.outputs.result}}"
+        TEST-CONSTRUCTORES_RESULTS: "${{steps.test-constructores.outputs.result}}"
+      with:
+        runners: test-cantidades,test-funcionalidades,test-constructores
