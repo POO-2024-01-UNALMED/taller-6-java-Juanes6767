@@ -6,7 +6,8 @@ public class Fabricante {
 	private String nombre;
 	private Pais pais;
 	ArrayList<Vehiculo> vehiculos;
-	ArrayList<Fabricante> fabricas;
+	static ArrayList<Fabricante> fabricas;
+	private static Fabricante mayorFabrica;
 	
 	public Fabricante(String nombre, Pais pais) {
 		this.nombre=nombre;
@@ -26,9 +27,18 @@ public class Fabricante {
 	public void setPais(Pais pais) {
 		this.pais = pais;
 	}
-	public static Vehiculo fabricaMayorVentas() {
-		// TODO Auto-generated method stub
-		return null;
+	public static Fabricante fabricaMayorVentas() {
+		for(int i=0;i<fabricas.size();i++) {
+			int mayor=0;
+			int acum=fabricas.get(i).vehiculos.size();
+			if(acum>=mayor) {
+				mayor+=acum;
+				mayorFabrica=fabricas.get(i);
+				
+			}
+			
+		}
+		return mayorFabrica;
 	}
 	
 }
